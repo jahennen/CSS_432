@@ -9,6 +9,8 @@
 #include <netinet/tcp.h>  // SO_REUSEADDR
 #include <sys/uio.h>      // writev
 
+#include <iostream>
+
 using namespace std;
 
 int main( int argc, char* argv[] ) {
@@ -27,6 +29,11 @@ int main( int argc, char* argv[] ) {
 
     struct hostent* host = gethostbyname( ip_addr );
 
+    if (host < 0) {
+    	cout << "ERROR, no such host" << endl;
+    	exit(0);
+    }
+
     sockaddr_in sendSockAddr;
     bzero( (char *) &sendSockAddr, sizeof( sendSockAddr ) );
     sendSockAddr.sin_family      = AF_INET; // Address Family Internet
@@ -39,14 +46,17 @@ int main( int argc, char* argv[] ) {
     connect( clientSd, (sockaddr *) &sendSockAddr, sizeof( sendSockAddr ) );
 
     // send a string to the server
-    char* msg = "Test";
-    write( clientSd, msg, strlen( msg ) );
+    string line;
+    while (line != "quit") {
+    	getline(cin, line);
+    	const char* msg = line.c_str();
+    	write( clientSd, msg, strlen( msg ) );
 
-    char buffer[16];
-    bzero( buffer, sizeof( buffer ) );
-    int count = read( clientSd, buffer, 15 );
+    	char buffer[16];
+    	bzero( buffer, sizeof( buffer ) );
+    	int count = read( clientSd, buffer, 15 );
 
-    cout << "Confirming: " << buffer << endl;
-
+    	cout << "Confirming: " << buffer << endl;
+    }
     return 0;
 }
