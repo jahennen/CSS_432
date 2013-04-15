@@ -40,20 +40,27 @@ int main( int argc, char* argv[] ) {
     // Get socket file descriptor
     Socket cliSock(port);
     int clientFd = cliSock.getClientSocket( ip_addr);
-
-    if (type == 1) {
-    	for (int j = 0; j < nbufs; j++)
-    	write(clientFd, databuf[j], bufsize);
-    } else if (type == 2) {
-    	struct iovec vector[nbufs];
+    for (int i = 0; i < nreps; i++) {
     	for (int j = 0; j < nbufs; j++) {
-    		vector[j].iov_base = databuf[j];
-    		vector[j].iov_len = bufsize;
+    		if (type == 1) {
+    			write(clientFd, databuf[j], bufsize);
+    		} else if (type == 2) {
+    			struct iovec vector[nbufs];
+    			vector[j].iov_base = databuf[j];
+    			vector[j].iov_len = bufsize;
+    			writev(clientFd, vector, nbufs);
+    		} else {
+    			write( clientFd, databuf, nbufs * bufsize );
+    		}
     	}
-    	writev(clientFd, vector, nbufs);
-    } else {
-    	 write( clientFd, databuf, nbufs * bufsize );
     }
+
+    char countbuf[4];
+
+    read(clientFd, countbuf, 4); // get the time result
+    if (atoi(countbuf) != nbufs)
+    	cout << "reads != writes" << endl;
+    cout << atoi(countbuf) << endl;
 
 //    // send a string to the server
 //    string line;

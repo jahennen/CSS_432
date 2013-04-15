@@ -52,4 +52,24 @@
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP"/>
 		</scannerConfigBuildInfo>
 	</storageModule>
+	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets">
+		<buildTargets>
+			<target name="client" path="src" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+				<buildCommand>g++</buildCommand>
+				<buildArguments>-Wall -g -o client Client.cpp Socket.cpp</buildArguments>
+				<stopOnError>true</stopOnError>
+				<useDefaultCommand>false</useDefaultCommand>
+				<runAllBuilders>true</runAllBuilders>
+			</target>
+			<target name="server" path="src" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+				<buildCommand>g++</buildCommand>
+				<buildArguments>-Wall -g -o server Server.cpp Socket.cpp</buildArguments>
+				<buildTarget/>
+				<stopOnError>true</stopOnError>
+				<useDefaultCommand>false</useDefaultCommand>
+				<runAllBuilders>true</runAllBuilders>
+			</target>
+		</buildTargets>
+	</storageModule>
 </cproject>

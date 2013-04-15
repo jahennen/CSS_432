@@ -11,19 +11,35 @@
 #include <netinet/tcp.h>  // SO_REUSEADDR
 #include <sys/uio.h>      // writev
 #include <sys/time.h>
+#include <sstream>
+
+#define BUFSIZE 1500
 
 using namespace std;
 
 int acceptSocket;
 int nreps;
 
-void my_function(int i) {
+void sigHandler(int i) {
 
+	cout << "signal received" << endl;
 	struct timeval startTime, endTime;
+
+	int count;
+	char databuf[BUFSIZE];
 	gettimeofday( &startTime, NULL);
 	for (int i = 0; i < nreps; i++) {
-
+		for ( int nRead = 0; ( nRead += read( acceptSocket, databuf, BUFSIZE - nRead ) ) < BUFSIZE; ++count );
 	}
+	gettimeofday( &endTime, NULL);
+	double elapsedTime;
+	elapsedTime = (endTime.tv_sec - startTime.tv_sec) * 1000.0;      // sec to ms
+	elapsedTime += (endTime.tv_usec - startTime.tv_usec) / 1000.0;   // us to ms
+	cout << elapsedTime << " ms.\n";
+	stringstream s;
+	s << count;
+	write(acceptSocket, s.str().c_str(), sizeof(s.str().c_str()));
+	exit(0);
 }
 
 int main( int argc, char* argv[] ) {
@@ -33,9 +49,10 @@ int main( int argc, char* argv[] ) {
     Socket servSock(port);
     acceptSocket = servSock.getServerSocket();
 
-    signal(SIGIO, my_function);
+    signal(SIGIO, sigHandler);
     fcntl(acceptSocket, F_SETOWN, getpid());
     fcntl(acceptSocket, F_SETFL, FASYNC);
+    while(true) {};
 //        string line;
 //        while(line != "quit" && acceptSocket) {
 //        	char buffer[16];
