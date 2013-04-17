@@ -1,0 +1,108 @@
+
+Type 1, nbuf 15, bufsize 100
+data-receiving time = 525988 usec
+data-receiving time = 559205 usec
+data-receiving time = 560775 usec
+data-receiving time = 590008 usec
+data-receiving time = 537324 usec
+data-receiving time = 534410 usec
+data-receiving time = 536458 usec
+data-receiving time = 534900 usec
+data-receiving time = 533725 usec
+data-receiving time = 556629 usec
+
+Type 2, nbuf 15, bufsize 100
+data-receiving time = 255136 usec
+data-receiving time = 255189 usec
+data-receiving time = 255152 usec
+data-receiving time = 255186 usec
+data-receiving time = 255175 usec
+data-receiving time = 255171 usec
+data-receiving time = 255183 usec
+data-receiving time = 255177 usec
+data-receiving time = 255160 usec
+data-receiving time = 255138 usec
+
+Type 3, nbuf 15, bufsize 100
+data-receiving time = 255135 usec
+data-receiving time = 255150 usec
+data-receiving time = 255129 usec
+data-receiving time = 255135 usec
+data-receiving time = 255122 usec
+data-receiving time = 255141 usec
+data-receiving time = 255131 usec
+data-receiving time = 255133 usec
+data-receiving time = 255135 usec
+data-receiving time = 255135 usec
+
+Type 1, nbuf 30, bufsize 50
+data-receiving time = 927092 usec
+data-receiving time = 907323 usec
+data-receiving time = 985467 usec
+data-receiving time = 907800 usec
+data-receiving time = 910835 usec
+data-receiving time = 1012188 usec
+data-receiving time = 910999 usec
+data-receiving time = 904980 usec
+data-receiving time = 889061 usec
+data-receiving time = 898880 usec
+
+Type 2, nbuf 30, bufsize 50
+data-receiving time = 279382 usec
+data-receiving time = 274614 usec
+data-receiving time = 274520 usec
+data-receiving time = 274027 usec
+data-receiving time = 274958 usec
+data-receiving time = 277769 usec
+data-receiving time = 282441 usec
+data-receiving time = 268171 usec
+data-receiving time = 278564 usec
+data-receiving time = 276309 usec
+
+Type 3, nbuf 30, bufsize 50
+data-receiving time = 255123 usec
+data-receiving time = 255131 usec
+data-receiving time = 255124 usec
+data-receiving time = 255142 usec
+data-receiving time = 255135 usec
+data-receiving time = 255125 usec
+data-receiving time = 255130 usec
+data-receiving time = 255142 usec
+data-receiving time = 255140 usec
+data-receiving time = 255137 usec
+
+Type 1, nbuf 60, bufsize 25
+data-receiving time = 1765863 usec
+data-receiving time = 1599105 usec
+data-receiving time = 1628261 usec
+data-receiving time = 1689690 usec
+data-receiving time = 1630664 usec
+data-receiving time = 1619173 usec
+data-receiving time = 1642909 usec
+data-receiving time = 1738065 usec
+data-receiving time = 1834066 usec
+data-receiving time = 1729222 usec
+
+Type 2, nbuf 60, bufsize 25
+data-receiving time = 431963 usec
+data-receiving time = 370502 usec
+data-receiving time = 419897 usec
+data-receiving time = 387382 usec
+data-receiving time = 377839 usec
+data-receiving time = 385034 usec
+data-receiving time = 435498 usec
+data-receiving time = 395669 usec
+data-receiving time = 393137 usec
+data-receiving time = 396641 usec
+
+Type 3, nbuf 60, bufsize 25
+data-receiving time = 255140 usec
+data-receiving time = 255231 usec
+data-receiving time = 255132 usec
+data-receiving time = 255132 usec
+data-receiving time = 255140 usec
+data-receiving time = 255114 usec
+data-receiving time = 255143 usec
+data-receiving time = 255138 usec
+data-receiving time = 255120 usec
+data-receiving time = 255129 usec

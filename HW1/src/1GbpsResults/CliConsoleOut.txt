@@ -1,0 +1,99 @@
+
+Test 1: data-sending time = 525999 usec, round-trip time = 526842 usec, # reads = 16511
+Test 1: data-sending time = 559211 usec, round-trip time = 559608 usec, # reads = 19025
+Test 1: data-sending time = 560811 usec, round-trip time = 561192 usec, # reads = 18933
+Test 1: data-sending time = 590046 usec, round-trip time = 590378 usec, # reads = 18922
+Test 1: data-sending time = 537323 usec, round-trip time = 537676 usec, # reads = 18133
+Test 1: data-sending time = 534441 usec, round-trip time = 534842 usec, # reads = 17361
+Test 1: data-sending time = 536457 usec, round-trip time = 536821 usec, # reads = 17846
+Test 1: data-sending time = 534898 usec, round-trip time = 535258 usec, # reads = 17302
+Test 1: data-sending time = 533728 usec, round-trip time = 534127 usec, # reads = 17471
+Test 1: data-sending time = 556660 usec, round-trip time = 556997 usec, # reads = 18942
+
+Test 2: data-sending time = 222491 usec, round-trip time = 255508 usec, # reads = 4485
+Test 2: data-sending time = 227480 usec, round-trip time = 255565 usec, # reads = 4523
+Test 2: data-sending time = 224120 usec, round-trip time = 255567 usec, # reads = 4517
+Test 2: data-sending time = 229207 usec, round-trip time = 255583 usec, # reads = 4495
+Test 2: data-sending time = 226053 usec, round-trip time = 255556 usec, # reads = 4497
+Test 2: data-sending time = 232149 usec, round-trip time = 255595 usec, # reads = 4492
+Test 2: data-sending time = 224790 usec, round-trip time = 255577 usec, # reads = 4474
+Test 2: data-sending time = 232948 usec, round-trip time = 255559 usec, # reads = 4511
+Test 2: data-sending time = 224429 usec, round-trip time = 255560 usec, # reads = 4505
+Test 2: data-sending time = 230100 usec, round-trip time = 255518 usec, # reads = 4489
+
+Test 3: data-sending time = 223064 usec, round-trip time = 255533 usec, # reads = 4508
+Test 3: data-sending time = 225184 usec, round-trip time = 255540 usec, # reads = 4487
+Test 3: data-sending time = 230821 usec, round-trip time = 255514 usec, # reads = 4512
+Test 3: data-sending time = 226250 usec, round-trip time = 255546 usec, # reads = 4484
+Test 3: data-sending time = 231290 usec, round-trip time = 255511 usec, # reads = 4512
+Test 3: data-sending time = 229163 usec, round-trip time = 255534 usec, # reads = 4508
+Test 3: data-sending time = 229390 usec, round-trip time = 255504 usec, # reads = 4509
+Test 3: data-sending time = 231504 usec, round-trip time = 255499 usec, # reads = 4514
+Test 3: data-sending time = 227116 usec, round-trip time = 255534 usec, # reads = 4487
+Test 3: data-sending time = 226789 usec, round-trip time = 255511 usec, # reads = 4501
+
+Test 1: data-sending time = 927082 usec, round-trip time = 927496 usec, # reads = 20140
+Test 1: data-sending time = 907303 usec, round-trip time = 907717 usec, # reads = 21034
+Test 1: data-sending time = 985467 usec, round-trip time = 985858 usec, # reads = 19749
+Test 1: data-sending time = 907837 usec, round-trip time = 908156 usec, # reads = 21031
+Test 1: data-sending time = 910843 usec, round-trip time = 911229 usec, # reads = 21124
+Test 1: data-sending time = 1012226 usec, round-trip time = 1012570 usec, # reads = 17619
+Test 1: data-sending time = 911008 usec, round-trip time = 911388 usec, # reads = 20809
+Test 1: data-sending time = 904996 usec, round-trip time = 905375 usec, # reads = 20977
+Test 1: data-sending time = 889084 usec, round-trip time = 889445 usec, # reads = 21189
+Test 1: data-sending time = 898871 usec, round-trip time = 899283 usec, # reads = 21119
+
+Test 2: data-sending time = 279422 usec, round-trip time = 279747 usec, # reads = 4120
+Test 2: data-sending time = 274609 usec, round-trip time = 275008 usec, # reads = 4386
+Test 2: data-sending time = 274541 usec, round-trip time = 274908 usec, # reads = 4378
+Test 2: data-sending time = 274104 usec, round-trip time = 274441 usec, # reads = 4398
+Test 2: data-sending time = 274935 usec, round-trip time = 275353 usec, # reads = 4359
+Test 2: data-sending time = 277802 usec, round-trip time = 278184 usec, # reads = 4270
+Test 2: data-sending time = 282495 usec, round-trip time = 282841 usec, # reads = 3986
+Test 2: data-sending time = 268183 usec, round-trip time = 268543 usec, # reads = 4588
+Test 2: data-sending time = 278606 usec, round-trip time = 278955 usec, # reads = 4191
+Test 2: data-sending time = 276321 usec, round-trip time = 276689 usec, # reads = 4342
+
+Test 3: data-sending time = 228373 usec, round-trip time = 255492 usec, # reads = 4498
+Test 3: data-sending time = 221744 usec, round-trip time = 255500 usec, # reads = 4518
+Test 3: data-sending time = 222456 usec, round-trip time = 255483 usec, # reads = 4520
+Test 3: data-sending time = 230483 usec, round-trip time = 255530 usec, # reads = 4502
+Test 3: data-sending time = 222307 usec, round-trip time = 255522 usec, # reads = 4501
+Test 3: data-sending time = 226772 usec, round-trip time = 255491 usec, # reads = 4494
+Test 3: data-sending time = 224482 usec, round-trip time = 255504 usec, # reads = 4506
+Test 3: data-sending time = 222397 usec, round-trip time = 255534 usec, # reads = 4517
+Test 3: data-sending time = 227683 usec, round-trip time = 255510 usec, # reads = 4499
+Test 3: data-sending time = 231082 usec, round-trip time = 255505 usec, # reads = 4516
+
+Test 1: data-sending time = 1765946 usec, round-trip time = 1766286 usec, # reads = 18685
+Test 1: data-sending time = 1599167 usec, round-trip time = 1599529 usec, # reads = 18111
+Test 1: data-sending time = 1628305 usec, round-trip time = 1628650 usec, # reads = 18413
+Test 1: data-sending time = 1689790 usec, round-trip time = 1690113 usec, # reads = 18339
+Test 1: data-sending time = 1630754 usec, round-trip time = 1631083 usec, # reads = 18094
+Test 1: data-sending time = 1619233 usec, round-trip time = 1619598 usec, # reads = 18146
+Test 1: data-sending time = 1642931 usec, round-trip time = 1643291 usec, # reads = 18254
+Test 1: data-sending time = 1738111 usec, round-trip time = 1738482 usec, # reads = 19057
+Test 1: data-sending time = 1834151 usec, round-trip time = 1834522 usec, # reads = 19727
+Test 1: data-sending time = 1729314 usec, round-trip time = 1729655 usec, # reads = 18508
+
+Test 2: data-sending time = 432037 usec, round-trip time = 432363 usec, # reads = 7641
+Test 2: data-sending time = 370556 usec, round-trip time = 370885 usec, # reads = 5242
+Test 2: data-sending time = 419954 usec, round-trip time = 420286 usec, # reads = 6727
+Test 2: data-sending time = 387438 usec, round-trip time = 387764 usec, # reads = 5656
+Test 2: data-sending time = 377846 usec, round-trip time = 378206 usec, # reads = 5473
+Test 2: data-sending time = 385065 usec, round-trip time = 385412 usec, # reads = 5613
+Test 2: data-sending time = 435552 usec, round-trip time = 435882 usec, # reads = 7949
+Test 2: data-sending time = 395754 usec, round-trip time = 396068 usec, # reads = 5751
+Test 2: data-sending time = 393164 usec, round-trip time = 393541 usec, # reads = 5784
+Test 2: data-sending time = 396694 usec, round-trip time = 397022 usec, # reads = 5924
+
+Test 3: data-sending time = 219952 usec, round-trip time = 255526 usec, # reads = 4504
+Test 3: data-sending time = 230715 usec, round-trip time = 255616 usec, # reads = 4512
+Test 3: data-sending time = 221369 usec, round-trip time = 255523 usec, # reads = 4505
+Test 3: data-sending time = 224549 usec, round-trip time = 255498 usec, # reads = 4510
+Test 3: data-sending time = 230134 usec, round-trip time = 255531 usec, # reads = 4492
+Test 3: data-sending time = 231420 usec, round-trip time = 255487 usec, # reads = 4498
+Test 3: data-sending time = 225199 usec, round-trip time = 255558 usec, # reads = 4503
+Test 3: data-sending time = 226424 usec, round-trip time = 255511 usec, # reads = 4482
+Test 3: data-sending time = 227142 usec, round-trip time = 255509 usec, # reads = 4507
+Test 3: data-sending time = 225050 usec, round-trip time = 255507 usec, # reads = 4483
