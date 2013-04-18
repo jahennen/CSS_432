@@ -1,3 +1,8 @@
+/*
+ * Author: Jay Hennen
+ * CSS_432 HW1
+ */
+
 #include "Socket.h"
 #include <sys/types.h>    // socket, bind
 #include <sys/socket.h>   // socket, bind, listen, inet_ntoa
@@ -14,9 +19,11 @@
 
 using namespace std;
 
+// Usage ./client [port] [nreps] [nbufs] [bufsize] [ip/hostname] [type]
+// Connects to a server process with the above parameters and transmits nbufs
+// buffers of bufsize size nreps times, while timing the transmit and
+// confirmation time. Outputs timing data to cout and raw data to cerr.
 int main( int argc, char* argv[] ) {
-
-    // need to extract port number and IP address
 
 	if (argc < 7 || atoi(argv[6]) > 3 || atoi(argv[6]) < 1) {
 		cout << "Bad parameters" << endl;
@@ -43,17 +50,17 @@ int main( int argc, char* argv[] ) {
     struct timeval startTime, endTime, lap;
     gettimeofday(&startTime, NULL);
     for (int i = 0; i < nreps; i++) {
-    		if (type == 1) {
+    		if (type == 1) {			// nbufs buffers of bufsize
     			for (int j = 0; j < nbufs; j++)
     			write(clientFd, databuf[j], bufsize);
-    		} else if (type == 2) {
+    		} else if (type == 2) {		// writev of a vector of nbufs
     			struct iovec vector[nbufs];
     			for (int j = 0; j < nbufs; j++) {
     			vector[j].iov_base = databuf[j];
     			vector[j].iov_len = bufsize;
     			}
     			writev(clientFd, vector, nbufs);
-    		} else {
+    		} else {					// write nbufs*bufsize all at once
     			write( clientFd, databuf, nbufs * bufsize );
     		}
     }
@@ -76,19 +83,5 @@ int main( int argc, char* argv[] ) {
 	cout << "# reads = " << count << endl;
 
     cerr << lapTime << "\t" << elapsedTime << "\t" << count << endl;
-
-//    // send a string to the server
-//    string line;
-//    while (line != "quit") {
-//    	getline(cin, line);
-//    	const char* msg = line.c_str();
-//    	write( clientFd, msg, strlen( msg ) );
-//
-//    	char buffer[16];
-//    	bzero( buffer, sizeof( buffer ) );
-//    	int count = read( clientFd, buffer, 15 );
-//
-//    	cout << "Confirming: " << buffer << endl;
-//    }
     return 0;
 }

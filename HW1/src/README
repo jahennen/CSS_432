@@ -1,0 +1,31 @@
+FILES INCLUDED:
+Client.cpp
+Server.cpp
+Socket.cpp
+Socket.h
+runclitest.sh
+runservtest.sh
+compile.sh
+HW1Discussion.odt
+100MbpsResults(folder)
+1GbpsResults(folder)
+
+To compile the program quickly, compile.sh can be used.
+
+Usage:
+
+./server [port] [nreps]
+
+./client [port] [nreps] [nbufs] [bufsize] [ip/hostname] [type]
+
+Server starts listening on the port supplied for client to connect. After
+connecting, a timer is started. The client then sends nbufs buffers of 
+bufsize size nreps times, and the timer lapped. Finally, after receiving
+confirmation from the server, the client ends the timer. Timing data is then
+printed to the console, and raw data to cerr for easy use in statistical
+analysis.
+
+The runclitest and runservtest scripts allow quick testing of all the cases
+multiple times. The script directs the cerr raw output to an output file by
+default. The raw data makes it easy to import into excel to do statistics on
+the info. 

@@ -1,3 +1,8 @@
+/*
+ * Author: Jay Hennen
+ * CSS_432 HW1
+ */
+
 #include "Socket.h"
 #include <signal.h>
 #include <fcntl.h>
@@ -19,6 +24,8 @@ using namespace std;
 int acceptSocket;
 int nreps;
 
+// Reads BUFSIZE bytes from the socket nreps times and conducts timing.
+// Outputs timing data to cout, and raw data to cerr, then exits.
 void sigHandler(int i) {
 	struct timeval startTime, endTime;
 	int count;
@@ -32,7 +39,7 @@ void sigHandler(int i) {
 	receiveTime = (endTime.tv_sec - startTime.tv_sec) * 1000000;      // sec to ms
 	receiveTime += (endTime.tv_usec - startTime.tv_usec);   // us to ms
 	cout << "data-receiving time = " << receiveTime << " usec" << endl;
-	cerr << receiveTime << endl;
+	cerr << receiveTime << endl; // Output raw data
 	write(acceptSocket, &count, sizeof(count));
 	exit(0);
 }
@@ -44,24 +51,14 @@ int main( int argc, char* argv[] ) {
     Socket servSock(port);
     acceptSocket = servSock.getServerSocket();
 
+    // Put the socket in asynchronous mode.
     signal(SIGIO, sigHandler);
     fcntl(acceptSocket, F_SETOWN, getpid());
     fcntl(acceptSocket, F_SETFL, FASYNC);
+
     while(true) {
     	sleep(1000);
     };
-//        string line;
-//        while(line != "quit" && acceptSocket) {
-//        	char buffer[16];
-//        	bzero( buffer, sizeof( buffer ) );
-//        	int count = read( acceptSocket, buffer, 15 );
-//        	line = buffer;
-//
-//        	cout << "Read: '" << buffer << "'" << endl;
-//
-//        	write( acceptSocket, buffer, count );
-//        }
-//    	close( acceptSocket );
-        return 0;
+    return 0;
 }
 
