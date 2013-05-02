@@ -1,1 +1,0 @@
-awk 'NR % 30 == '"$i"' { print NR " " $1; n++; sum += $1 } ; END { print "avg = " sum/n}'
