@@ -45,13 +45,11 @@ void serverReliable( UdpSocket &sock, const int max, int message[] ) {
 
 	// receive message[] max times
 	int seq;
-	while(true) {
+	while(seq != max - 1) {
 		while( sock.pollRecvFrom() <=0 ){}				// pause until message
 		sock.recvFrom( ( char * ) message, MSGSIZE );   // udp message receive
 		seq = *message;									// get the seq # from beginning of msg
 		sock.ackTo((char*)&seq, sizeof(seq));
-		if (seq == max-1)
-			break;
 	}
 }
 int clientSlidingWindow( UdpSocket &sock, const int max, int message[], int windowSize ) {
@@ -94,7 +92,7 @@ void serverEarlyRetrans( UdpSocket &sock, const int max, int message[], int wind
 	int lastSeq = -1;
 	int windowLoc = 0;
 	vector<int> window(windowSize);
-	for(int i = 0; i < windowSize; i++) { //init window
+	for(int i = 0; i < windowSize; i++) { 				//init window
 		window[i] = -1;
 	}
 	while(seq < max) {
