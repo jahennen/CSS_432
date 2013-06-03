@@ -5,8 +5,11 @@
 using namespace std;
 
 void main(int argc, char* argv[]) {
-	int ctrl;	//Socket constructor returns an int to the location of the socket
-	int data;
+	Socket ctrl;
+	int ctrlint;
+
+	Socket data;
+	int dataint;
 
 	string cmd;
 	while(1) {
@@ -14,6 +17,14 @@ void main(int argc, char* argv[]) {
 		switch (cmd) {
 
 		case "open":
+			if(argv[2]){
+				ctrl.Socket(21);
+				ctrlint = ctrl.getClientSocket(argv[1]);
+
+				data.Socket(argv[2]);
+				dataint = data.getClientSocket(argv[1]);
+			}
+
 			break;
 
 		case "password":
