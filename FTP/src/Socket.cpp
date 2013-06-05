@@ -86,3 +86,13 @@ int Socket::getServerSocket( ) {
   }
   return newFd;
 }
+
+int Socket::pollRecvFrom( ) {
+  struct pollfd pfd[1];
+  pfd[0].fd = clientFd;             // declare I'll check the data availability of sd
+  pfd[0].events = POLLRDNORM; // declare I'm interested in only reading from sd
+
+  // check it immediately and return a positive number if sd is readable,
+  // otherwise return 0 or a negative number
+  return poll( pfd, 1, 0 );
+}

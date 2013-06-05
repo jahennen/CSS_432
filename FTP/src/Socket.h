@@ -14,6 +14,7 @@ extern "C"
 #include <netinet/tcp.h>  // TCP_NODELAY
 #include <stdlib.h>
 #include <stdio.h>
+#include <sys/poll.h>     // for poll( )
 }
 
 #define NULL_FD -1
@@ -26,6 +27,7 @@ class Socket {
   int getClientSocket( char[], int sndbufsize, bool nodelay );
   int getServerSocket( );
   int getServerSocket( int rcvbufsize, bool nodelay );
+  int pollRecvFrom( );           // check if this socket has data to receive
  private:
   int port;
   int clientFd;
