@@ -1,112 +1,127 @@
+/*	CSS 432 Final Project
+ * 	6/6/2013
+ * 	Authors: Jay Hennen & Chris Rouse
+ */
+
 
 #include "Socket.h"
 #include "Timer.h"
 #include <sstream>
 #include <vector>
 #include <sys/poll.h>
-#include <sys/wait.h>
 #include <cstdlib>
+#include <ios>
 #include <fstream>
 
 #define BUFLEN 1500
 
 using namespace std;
 
+// Socket and fd information
 Socket ctrl(21);
 Socket data(23);
+int ctrlfd;
+int datafd;
 
-void cmd_name(int& ctrlfd, string& name);
-void cmd_passwd(int& ctrlfd, string& passwd);
-
-//currently WILL FREEZE if server does not accept ftp connections on the port specified
-void cmd_open(int& ctrlfd, Socket& ctrl, string& hostname, string& port) {
+// Gets a response from the server on the ctrl socket
+string get_res() {
 	char message[BUFLEN];
-	ctrl = Socket(atoi(port.c_str()));
-	ctrlfd = ctrl.getClientSocket((char*)(hostname.c_str()));
 	int n = read(ctrlfd, message, BUFLEN);
 	message[n] = '\0';
-	cout << message;
-	string name;
-	cout << "Name: ";
-	getline (cin, name);
-	cmd_name(ctrlfd, name);
+	string temp(message);
+	return temp;
 }
 
-void cmd_name(int& ctrlfd, string& name) {
+// Sends a message to the server on the ctrl socket, given a type and arg.
+void send_msg(string type, string& arg) {
 	char message[BUFLEN];
 	stringstream cmd;
-	cmd << "USER " << name << (char)13 << (char)10 << '\0';
+	cmd << type;
+	if (arg != "")
+		cmd << " " << arg << (char)13 << (char)10 << '\0';
+	else
+		cmd <<  (char)13 << (char)10 << '\0';
 	string msg = cmd.str();
 	strncpy(message,msg.c_str(), msg.length());
 	write(ctrlfd, message, strlen(message));
-	int n = read(ctrlfd, message, BUFLEN);
-	message[n] = '\0';
-	cout << message;
+}
+
+// Overloaded send_msg for single param use (no arg).
+void send_msg(string type) {
+	string temp = "";
+	send_msg(type, temp);
+}
+
+// Reads data from a specified socket into an ostream until no more data is available.
+void sock_to_ostream(int& sock, ostream& s) {
+	char message[BUFLEN];
+	struct pollfd ufds;
+	ufds.fd = sock;                     // a socket descriptor to exmaine for read
+	ufds.events = POLLIN;             // check if this sd is ready to read
+	ufds.revents = 0;                 // simply zero-initialized
+	while ( poll(&ufds, 1, 1000) >0 ) {                  // the socket is ready to read
+		int n = read( sock, message, BUFLEN ); // guaranteed to return from read
+		if (n == 0)
+			break;
+		message[n] = '\0';
+		string msg(message);
+		s << msg;
+	}
+}
+
+void cmd_name(string& name);
+void cmd_passwd(string& passwd);
+
+// open command will connect to the specified server on specified port and initiate control connection
+// It will then ask for username and password
+//currently WILL FREEZE if server does not accept ftp connections on the port specified
+void cmd_open(string& hostname, string& port) {
+	ctrl = Socket(atoi(port.c_str()));
+	ctrlfd = ctrl.getClientSocket((char*)(hostname.c_str()));
+	cout << get_res();
+	string name;
+	cout << "Name: ";
+	getline (cin, name);
+	cmd_name(name);
+}
+
+// name command will set the current username on the server, then ask for password
+void cmd_name(string& name) {
+	send_msg("USER", name);
+	cout << get_res();
 	string passwd;
 	cout.clear();
 	cout << "Password: ";
 	getline(cin, passwd);
-	cmd_passwd(ctrlfd, passwd);
+	cmd_passwd(passwd);
 }
 
-void cmd_passwd(int& ctrlfd, string& passwd) {
-	char message[BUFLEN];
-	stringstream cmd;
-	cmd << "PASS " << passwd << (char)13 << (char)10 << '\0';
-	string msg = cmd.str();
-	strncpy(message,msg.c_str(), msg.length());
-	write(ctrlfd, message, strlen(message));
-
-	struct pollfd ufds;
-
-	ufds.fd = ctrlfd;                     // a socket descriptor to exmaine for read
-	ufds.events = POLLIN;             // check if this sd is ready to read
-	ufds.revents = 0;                 // simply zero-initialized
-
-	while ( poll(&ufds, 1, 1000) >0 ) {                  // the socket is ready to read
-		int n = read( ctrlfd, message, BUFLEN ); // guaranteed to return from read
-		message[n] = '\0';
-		cout << message;
-	}
+// password command will send password to server for authentication, and read any MOTD to cout
+void cmd_passwd(string& passwd) {
+	send_msg("PASS", passwd);
+	sock_to_ostream(ctrlfd, cout);
 }
 
-void cmd_close(int& ctrlfd) {
-	char message[BUFLEN];
-	stringstream cmd;
-	cmd << "QUIT" << (char)13 << (char)10 << '\0';
-	string msg = cmd.str();
-	strncpy(message,msg.c_str(), msg.length());
-	write(ctrlfd, message, strlen(message));
-	int n = read(ctrlfd, message, BUFLEN);
-	message[n] = '\0';
-	cout << message;
+// close will close the connection to the server and reset the control file descriptor.
+void cmd_close() {
+	send_msg("QUIT");
+	cout << get_res();
 	close(ctrlfd);
 	ctrlfd = 0;
 }
 
-void cmd_cd(int& ctrlfd, string& subdir) {
-	char message[BUFLEN];
-	stringstream cmd;
-	cmd << "CWD " << subdir << (char)13 << (char)10 << '\0';
-	string msg = cmd.str();
-	strncpy(message,msg.c_str(), msg.length());
-	write(ctrlfd, message, strlen(message));
-	int n = read(ctrlfd, message, BUFLEN);
-	message[n] = '\0';
-	cout << message;
+// cd sends a change directory request to the server.
+void cmd_cd(string& subdir) {
+	send_msg("CWD");
+	cout << get_res();
 }
 
-vector<string> pasv_port(int& ctrlfd) {
-	char message[BUFLEN];
-	stringstream cmd;
-	cmd << "PASV" << (char)13 << (char)10 << '\0';
-	string msg = cmd.str();
-	strncpy(message,msg.c_str(), msg.length());
-	write(ctrlfd, message, strlen(message));
-	int n = read(ctrlfd, message, BUFLEN);
-	message[n] = '\0';
-	cout << message;
-	string res(message);
+// This helper method requests PASV mode from the server and returns a string vector of information
+// The format is (IP_oct1,IP_oct2,IP_oct3,IP_oct4,Port%256,Remainder)
+vector<string> pasv_port() {
+	send_msg("PASV");
+	string res = get_res();
+	cout << res;
 	res = res.substr(res.find('(')+1);
 	res[res.find(')')]=',';
 	stringstream nums(res);
@@ -119,9 +134,9 @@ vector<string> pasv_port(int& ctrlfd) {
 	return tuple;
 }
 
-void cmd_ls(int& ctrlfd, int& datafd) {
-	char message[BUFLEN];
-	vector<string> tuple = pasv_port(ctrlfd);
+// Initializes the data socket with the server
+void init_datafd() {
+	vector<string> tuple = pasv_port();
 	data = Socket(atoi(tuple[4].c_str()) * 256 + atoi(tuple[5].c_str()));
 	string hostname;
 	hostname.append(tuple[0]);
@@ -129,114 +144,48 @@ void cmd_ls(int& ctrlfd, int& datafd) {
 		hostname.append(".").append(tuple[i]);
 	}
 	datafd = data.getClientSocket((char*)hostname.c_str());
-	stringstream cmd;
-	cmd << "LIST" << (char)13 << (char)10 << '\0';
-	string msg = cmd.str();
-	strncpy(message,msg.c_str(), msg.length());
-	write(ctrlfd, message, strlen(message));
-	int n = read(ctrlfd, message, BUFLEN);
-	message[n] = '\0';
-	cout << message;
+}
 
-	struct pollfd ufds;
-
-	ufds.fd = datafd;                     // a socket descriptor to exmaine for read
-	ufds.events = POLLIN;             // check if this sd is ready to read
-	ufds.revents = 0;                 // simply zero-initialized
-
-	while ( poll(&ufds, 1, 1000) >0 ) {                  // the socket is ready to read
-		n = read( datafd, message, BUFLEN ); // guaranteed to return from read
-		if (n == 0)
-			break;
-		message[n] = '\0';
-		cout << message;
-	}
-	n = read(ctrlfd, message, BUFLEN);
-	message[n] = '\0';
-	cout << message;
+// ls command will request the current directory listing form the server, which will be
+// transmitted over the data socket.
+void cmd_ls() {
+	init_datafd();
+	send_msg("LIST");
+	cout << get_res();
+	sock_to_ostream(datafd, cout);
+	cout << get_res();
 	close(datafd);
 }
 
-void cmd_get(int& ctrlfd, int& datafd, string& remoteName, string& localName) {
-	vector<string> tuple = pasv_port(ctrlfd);
-	data = Socket(atoi(tuple[4].c_str()) * 256 + atoi(tuple[5].c_str()));
-	string hostname;
-	hostname.append(tuple[0]);
-	for (int i = 1; i < 4; i++) {
-		hostname.append(".").append(tuple[i]);
-	}
-	datafd = data.getClientSocket((char*)hostname.c_str());
-	char message[BUFLEN];
-	stringstream cmd;
-	cmd << "TYPE I" << (char)13 << (char)10 << '\0';
-	string msg = cmd.str();
-	strncpy(message,msg.c_str(), msg.length());
-	write(ctrlfd, message, strlen(message));
-	int n = read(ctrlfd, message, BUFLEN);
-	message[n] = '\0';
-	cout << message;
-
-	cmd.str("");
-
-	cmd << "RETR " << remoteName << (char)13 << (char)10 << '\0';
-	msg = cmd.str();
-	strncpy(message,msg.c_str(), msg.length());
-	write(ctrlfd, message, strlen(message));
-	n = read(ctrlfd, message, BUFLEN);
-	message[n] = '\0';
-	cout << message;
-
-	struct pollfd ufds;
-
-	ufds.fd = datafd;                     // a socket descriptor to exmaine for read
-	ufds.events = POLLIN;             // check if this sd is ready to read
-	ufds.revents = 0;                 // simply zero-initialized
-
+// get receives the remoteName file from the server and saves it as localName on the client.
+void cmd_get(string& remoteName, string& localName) {
+	Timer t;
+	t.start();
+	init_datafd();
+	send_msg("TYPE I");
+	cout << get_res();
+	send_msg("RETR", remoteName);
+	cout << get_res();
 	ofstream out(localName.c_str(), std::ofstream::app) ;
-	while ( poll(&ufds, 1, 1000) >0 ) {                  // the socket is ready to read
-		n = read( datafd, message, BUFLEN ); // guaranteed to return from read
-		if (n == 0)
-			break;
-		message[n] = '\0';
-		out << message;
-	}
+	sock_to_ostream(datafd, out);
 	out.close();
 	close(datafd);
-	n = read(ctrlfd, message, BUFLEN);
-	message[n] = '\0';
-	cout << message;
+	cout << get_res();
+	long int elapsed = t.lap();
+	cout << "Elapsed time: " << elapsed << " usec" << endl;
 }
 
-void cmd_put(int& ctrlfd, int& datafd, string& localName, string& remoteName) {
-	vector<string> tuple = pasv_port(ctrlfd);
-	data = Socket(atoi(tuple[4].c_str()) * 256 + atoi(tuple[5].c_str()));
-	string hostname;
-	hostname.append(tuple[0]);
-	for (int i = 1; i < 4; i++) {
-		hostname.append(".").append(tuple[i]);
-	}
-	datafd = data.getClientSocket((char*)hostname.c_str());
-	char message[BUFLEN];
-	stringstream cmd;
-	cmd << "TYPE I" << (char)13 << (char)10 << '\0';
-	string msg = cmd.str();
-	strncpy(message,msg.c_str(), msg.length());
-	write(ctrlfd, message, strlen(message));
-	int n = read(ctrlfd, message, BUFLEN);
-	message[n] = '\0';
-	cout << message;
-
-	cmd.str("");
-
-	cmd << "STOR " << remoteName << (char)13 << (char)10 << '\0';
-	msg = cmd.str();
-	strncpy(message,msg.c_str(), msg.length());
-	write(ctrlfd, message, strlen(message));
-	n = read(ctrlfd, message, BUFLEN);
-	message[n] = '\0';
-	cout << message;
-
+// put sends the localName file to the server, which saves it as remoteName.
+void cmd_put(string& localName, string& remoteName) {
+	Timer t;
+	t.start();
+	init_datafd();
+	send_msg("TYPE I");
+	cout << get_res();
+	send_msg("STOR", remoteName);
+	cout << get_res();
 	ifstream infile(localName.c_str(), std::ifstream::in);
+	char message[BUFLEN];
 	while (!infile.eof()) {
 		infile.read(message, BUFLEN);
 		int c = infile.gcount();
@@ -244,15 +193,21 @@ void cmd_put(int& ctrlfd, int& datafd, string& localName, string& remoteName) {
 	}
 	infile.close();
 	close(datafd);
-	n = read(ctrlfd, message, BUFLEN);
-	message[n] = '\0';
-	cout << message;
+	cout << get_res();
+	long int elapsed = t.lap();
+	cout << "Elapsed time: " << elapsed << " usec" << endl;
 }
 
-int main(int argc, char* argv[]) {
-	int ctrlfd;
-	int datafd;
+// helper in case insufficient args are given to get and put
+void get_more_args(string& arg1, string& arg2) {
+	cout << "(remote-file) ";
+	getline(cin, arg1);
+	cout << "(local-file) ";
+	getline(cin, arg2);
+}
 
+// Loops and interprets user commands by calling appropriate sub-commands.
+int main(int argc, char* argv[]) {
 	while(1) {
 		cout << "ftp> ";
 		string input;
@@ -264,48 +219,46 @@ int main(int argc, char* argv[]) {
 
 		if (cmd=="open") {
 			if (arg1!="" && arg2!="")
-				cmd_open(ctrlfd, ctrl, arg1, arg2);
+				cmd_open(arg1, arg2);
 			else
 				cout << "usage: open <hostname> <port>" << endl;
-		} else if (cmd == "quit") {
+		}
+		if (cmd == "quit") {
 			if (ctrlfd != 0)
-				cmd_close(ctrlfd);
+				cmd_close();
 			exit(0);
-		} else if (ctrlfd == 0 ) {
+		}
+		if (ctrlfd == 0 ) {
 			cout << "Not connected" << endl;
 			continue;
 		} else if (cmd == "name") {
-			cmd_name(ctrlfd, arg1);
+			cmd_name(arg1);
 		} else if (cmd == "password") {
-			cmd_passwd(ctrlfd, arg1);
+			cmd_passwd(arg1);
 		} else if (cmd == "cd") {
-			cmd_cd(ctrlfd, arg1);
+			cmd_cd(arg1);
 		} else if (cmd == "ls") {
-			cmd_ls(ctrlfd, datafd);
+			cmd_ls();
 		} else if (cmd == "get") {
 			if (arg1 == "") {
-				cout << "(remote-file) ";
-				getline(cin, arg1);
-				cout << "(local-file) ";
-				getline(cin, arg2);
+				get_more_args(arg1, arg2);
 			}
 			if (arg2 == "") {
 				arg2 = arg1;
 			}
-			cmd_get(ctrlfd, datafd, arg1, arg2);
+			cmd_get(arg1, arg2);
 		} else if (cmd == "put") {
 			if (arg1 == "") {
-				cout << "(remote-file) ";
-				getline(cin, arg1);
-				cout << "(local-file) ";
-				getline(cin, arg2);
+				get_more_args(arg1, arg2);
 			}
 			if (arg2 == "") {
 				arg2 = arg1;
 			}
-			cmd_put(ctrlfd, datafd, arg1, arg2);
+			cmd_put(arg1, arg2);
 		} else if (cmd == "close") {
-			cmd_close(ctrlfd);
+			cmd_close();
+		} else {
+			cout << "Invalid command" << endl;
 		}
 	}
 	return 0;
