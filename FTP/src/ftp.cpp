@@ -112,7 +112,7 @@ void cmd_close() {
 
 // cd sends a change directory request to the server.
 void cmd_cd(string& subdir) {
-	send_msg("CWD");
+	send_msg("CWD", subdir);
 	cout << get_res();
 }
 
@@ -148,9 +148,9 @@ void init_datafd() {
 
 // ls command will request the current directory listing form the server, which will be
 // transmitted over the data socket.
-void cmd_ls() {
+void cmd_ls(string& arg1) {
 	init_datafd();
-	send_msg("LIST");
+	send_msg("LIST", arg1);
 	cout << get_res();
 	sock_to_ostream(datafd, cout);
 	cout << get_res();
@@ -222,13 +222,11 @@ int main(int argc, char* argv[]) {
 				cmd_open(arg1, arg2);
 			else
 				cout << "usage: open <hostname> <port>" << endl;
-		}
-		if (cmd == "quit") {
+		} else if (cmd == "quit") {
 			if (ctrlfd != 0)
 				cmd_close();
 			exit(0);
-		}
-		if (ctrlfd == 0 ) {
+		} else if (ctrlfd == 0 ) {
 			cout << "Not connected" << endl;
 			continue;
 		} else if (cmd == "name") {
@@ -238,7 +236,7 @@ int main(int argc, char* argv[]) {
 		} else if (cmd == "cd") {
 			cmd_cd(arg1);
 		} else if (cmd == "ls") {
-			cmd_ls();
+			cmd_ls(arg1);
 		} else if (cmd == "get") {
 			if (arg1 == "") {
 				get_more_args(arg1, arg2);
